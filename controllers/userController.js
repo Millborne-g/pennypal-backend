@@ -46,19 +46,37 @@ exports.registerUser = async (req, res) => {
 };
 
 exports.loginUser = async (req, res) => {
-    const { email, password } = req.params;
+    const { email, password } = req.body;
 
     try {
-        const user = await User.findOne({ email, password });
+        const user = await User.findOne({ email });
         if (!user) {
-            res.status(404).json({ message: "user not found!" });
+            return res.status(404).json({ message: "User not found!" });
+        } else {
+            if (user.password !== password) {
+                if (password === "googlesignin") {
+                    // create a token
+                    const token = createToken(user._id);
+                    return res.json({ user, token: token });
+                } else {
+                    return res.json({
+                        correctPassword: false,
+                        message: "Password incorrect!",
+                    });
+                }
+            } else {
+                // create a token
+                const token = createToken(user._id);
+                return res.json({ user, token: token });
+            }
         }
-        // create a token
-        const token = createToken(user._id);
-        res.json({ user, token: token });
+
+        // // create a token
+        // const token = createToken(user._id);
+        // return res.json({ user, token: token });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
+        return res.status(500).json({ message: "Internal Server Error" });
     }
 };
 
@@ -72,9 +90,9 @@ exports.findUserByEmail = async (req, res) => {
             return res.status(404).json({ message: "User not found!" });
         }
 
-        res.json(user);
+        return res.json(user);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Internal Server Error" });
+        return res.status(500).json({ message: "Internal Server Error" });
     }
 };

@@ -11,7 +11,8 @@ router.post('/user/register', userController.registerUser);
 router.get('/user/users', userController.getAllUsers);
 
 // Login user
-router.get("/user/login/:email/:password", userController.loginUser);
+// router.get("/user/login/:email/:password", userController.loginUser);
+router.post("/user/login", userController.loginUser);
 
 // Find a user by email
 router.get('/users/:email', userController.findUserByEmail);
