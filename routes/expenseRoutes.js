@@ -19,4 +19,6 @@ router.get('/expenses/year/:year', expenseController.getExpensesByYear);
 // Get expenses for a specific userId
 router.get('/expenses/user/:userId', expenseController.getExpensesByUserId);
 
+router.post("/expenses/date-range", expenseController.getExpenseByDateRange);
+
 module.exports = router;

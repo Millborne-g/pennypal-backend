@@ -75,3 +75,23 @@ exports.getExpensesByUserId = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
+// Controller to get expenses by date range
+exports.getExpenseByDateRange = async (req, res) => {
+  const { userId, startDate, endDate } = req.body;
+
+  try {
+    const expenses = await Expense.find({
+      user: userId,
+      date: {
+        $gte: new Date(startDate),
+        $lte: new Date(`${endDate}T23:59:59.999Z`)
+      }
+    });
+
+    res.json(expenses);
+  } catch (error) {
+    console.error('Error querying expenses by date range:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
