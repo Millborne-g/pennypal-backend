@@ -79,7 +79,7 @@ exports.getIncomesByUserId = async (req, res) => {
 
 // Controller to get income by date range
 exports.getExpenseByDateRange = async (req, res) => {
-  const { userId, startDate, endDate } = req.body;
+  const { userId, startDate, endDate } = req.params;
 
   try {
     const incomes = await Income.find({

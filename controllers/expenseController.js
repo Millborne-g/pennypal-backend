@@ -78,7 +78,7 @@ exports.getExpensesByUserId = async (req, res) => {
 
 // Controller to get expenses by date range
 exports.getExpenseByDateRange = async (req, res) => {
-  const { userId, startDate, endDate } = req.body;
+  const { userId, startDate, endDate } = req.params;
 
   try {
     const expenses = await Expense.find({
