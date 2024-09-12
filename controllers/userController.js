@@ -3,8 +3,8 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 
-const createToken = (_id) => {
-    return jwt.sign({ _id }, process.env.JWTSECRET, { expiresIn: "2m" });
+const createToken = (user) => {
+    return jwt.sign({ user }, process.env.JWTSECRET, { expiresIn: "1d" });
 };
 
 // Controller to register a new user
@@ -56,8 +56,9 @@ exports.loginUser = async (req, res) => {
             if (user.password !== password) {
                 if (password === "googlesignin") {
                     // create a token
-                    const token = createToken(user._id);
-                    return res.json({ user, token: token });
+                    const token = createToken(user);
+
+                    return res.json({ user, userToken: token });
                 } else {
                     return res.json({
                         correctPassword: false,
@@ -66,8 +67,8 @@ exports.loginUser = async (req, res) => {
                 }
             } else {
                 // create a token
-                const token = createToken(user._id);
-                return res.json({ user, token: token });
+                const token = createToken(user);
+                return res.json({ user, userToken: token });
             }
         }
 

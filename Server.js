@@ -1,7 +1,7 @@
 const express = require("express");
-const mongoose  = require("mongoose");
+const mongoose = require("mongoose");
 const cors = require("cors");
-const helmet = require('helmet');
+const helmet = require("helmet");
 
 const { Server } = require("socket.io");
 // const socketIo = require('socket.io');
@@ -11,11 +11,12 @@ const expenseRoutes = require("./routes/expenseRoutes");
 const incomeRoutes = require("./routes/incomeRoutes");
 const userRoutes = require("./routes/userRoutes");
 const messageRoutes = require("./routes/messageRoutes");
+const jwtRoutes = require("./routes/authRoutes");
 
-require('dotenv').config();
+require("dotenv").config();
 
 // Server
-const app = express();;
+const app = express();
 const PORT = process.env.port || 5000;
 app.use(express.json());
 app.use(cors());
@@ -53,9 +54,10 @@ app.use(expenseRoutes);
 app.use(incomeRoutes);
 app.use(userRoutes);
 app.use(messageRoutes);
+app.use(jwtRoutes);
 
 // Socket
-const server =  http.createServer(app);
+const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
         methods: ["GET", "POST"],
@@ -64,30 +66,31 @@ const io = new Server(server, {
 // const io = socketIo(server);
 
 // Socket.IO
-io.on('connection', (socket) => {
+io.on("connection", (socket) => {
     console.log(`A user connected ${socket.id}`);
-  
+
     // Handle real-time events here
     // Example: socket.on('chat message', (message) => { ... });
-  
-    socket.on('sendMessage', (data) => {
-        socket.broadcast.emit('receiveMessage', data);
+
+    socket.on("sendMessage", (data) => {
+        socket.broadcast.emit("receiveMessage", data);
     });
 
-    socket.on('disconnect', () => {
-      console.log('A user disconnected');
+    socket.on("disconnect", () => {
+        console.log("A user disconnected");
     });
 });
 
 io.engine.on("connection_error", (err) => {
-    console.log(err.req);      // the request object
-    console.log(err.code);     // the error code, for example 1
-    console.log(err.message);  // the error message, for example "Session ID unknown"
-    console.log(err.context);  // some additional error context
+    console.log(err.req); // the request object
+    console.log(err.code); // the error code, for example 1
+    console.log(err.message); // the error message, for example "Session ID unknown"
+    console.log(err.context); // some additional error context
 });
 
-mongoose.connect(process.env.MONGODB_URL)
+mongoose
+    .connect(process.env.MONGODB_URL)
     .then(() => console.log("Connected to DB..."))
-    .catch((err) => console.log(err))
+    .catch((err) => console.log(err));
 
 server.listen(PORT, () => console.log(`Listening to ${PORT}...`));
