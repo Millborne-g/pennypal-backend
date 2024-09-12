@@ -4,7 +4,7 @@ const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 
 const createToken = (user) => {
-    return jwt.sign({ user }, process.env.JWTSECRET, { expiresIn: "2m" });
+    return jwt.sign({ user }, process.env.JWTSECRET, { expiresIn: "1d" });
 };
 
 // Controller to register a new user
@@ -58,7 +58,7 @@ exports.loginUser = async (req, res) => {
                     // create a token
                     const token = createToken(user);
 
-                    return res.json({ user, token: token });
+                    return res.json({ user, userToken: token });
                 } else {
                     return res.json({
                         correctPassword: false,
@@ -68,7 +68,7 @@ exports.loginUser = async (req, res) => {
             } else {
                 // create a token
                 const token = createToken(user);
-                return res.json({ user, token: token });
+                return res.json({ user, userToken: token });
             }
         }
 
