@@ -15,10 +15,10 @@ exports.getAllExpenses = async (req, res) => {
 
 // Controller to add a new expense
 exports.addExpense = async (req, res) => {
-    const { amount, category, user, note } = req.body;
+    const { amount, category, user, note, date } = req.body;
 
     try {
-        const newExpense = new Expense({ amount, category, user, note });
+        const newExpense = new Expense({ amount, category, user, note, date });
         const savedExpense = await newExpense.save();
 
         res.status(201).json(savedExpense);
