@@ -15,10 +15,10 @@ exports.getAllIncome = async (req, res) => {
 
 // Controller to add a new income
 exports.addIncome = async (req, res) => {
-    const { amount, category, user, note } = req.body;
+    const { amount, category, user, note, date } = req.body;
 
     try {
-        const newIncome = new Income({ amount, category, user, note });
+        const newIncome = new Income({ amount, category, user, note, date });
         const savedIncome = await newIncome.save();
         res.status(201).json(savedIncome);
     } catch (error) {
