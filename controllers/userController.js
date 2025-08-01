@@ -10,7 +10,7 @@ const createToken = (user) => {
 // Controller to register a new user
 exports.getAllUsers = async (req, res) => {
     try {
-        const users = await User.find();
+        const users = await User.find().select("-password");
         res.json(users);
     } catch (error) {
         console.error(error.code);
@@ -35,7 +35,8 @@ exports.registerUser = async (req, res) => {
             userImage,
         });
         const savedUser = await newUser.save();
-        res.status(201).json(savedUser);
+        const token = createToken(savedUser);
+        res.status(201).json({ savedUser, token });
     } catch (error) {
         console.error(error.code);
         res.status(500).json({
